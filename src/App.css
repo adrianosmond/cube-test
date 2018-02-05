@@ -1,0 +1,20 @@
+.solution {
+  position: relative;
+  padding: 20vh 47vw 30vh;
+  perspective: 10000px;
+}
+
+.options {
+  list-style-type: none;
+  padding-left: 0;
+  font-size: 5px;
+  display: flex;
+  width: 100%;
+  justify-content: space-around;
+}
+
+.options__choice {
+  display: inline-block;
+  width: calc(3 * var(--face-size));
+  height: calc(4 * var(--face-size));
+}

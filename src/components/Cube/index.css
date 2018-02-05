@@ -1,0 +1,206 @@
+:root {
+  --face-size: 5em;
+}
+
+.cube {
+  position: relative;
+  width: var(--face-size);
+  height: var(--face-size);
+  transform-style: preserve-3d;
+}
+
+/* B on top */
+.cube--orientation-1 {
+  /* BGC */
+  transform: rotateX(45deg) rotateZ(45deg)
+}
+
+.cube--orientation-2 {
+  /* BYG */
+  transform: rotateX(45deg) rotateZ(-45deg)
+}
+
+.cube--orientation-3 {
+  /* BCR */
+  transform: rotateX(45deg) rotateZ(135deg)
+}
+
+.cube--orientation-4 {
+  /* BRY */
+  transform: rotateX(45deg) rotateZ(-135deg)
+}
+
+/* M on top */
+.cube--orientation-5 {
+  /* MYR */
+  transform: rotateX(-135deg) rotateZ(45deg)
+}
+
+.cube--orientation-6 {
+  /* MRC */
+  transform: rotateX(-135deg) rotateZ(-45deg)
+}
+
+.cube--orientation-7 {
+  /* MGY */
+  transform: rotateX(-135deg) rotateZ(135deg)
+}
+
+.cube--orientation-8 {
+  /* MCG */
+  transform: rotateX(-135deg) rotateZ(-135deg)
+}
+
+/* Y on top */
+.cube--orientation-9 {
+  /* YMG */
+  transform: rotateY(90deg) rotateZ(45deg) rotateX(45deg);
+}
+
+.cube--orientation-10 {
+  /* YGB */
+  transform: rotateY(90deg) rotateZ(45deg) rotateX(-45deg);
+}
+
+.cube--orientation-11 {
+  /* YRM */
+  transform: rotateY(90deg) rotateZ(45deg) rotateX(135deg);
+}
+
+.cube--orientation-12 {
+  /* YBR */
+  transform: rotateY(90deg) rotateZ(45deg) rotateX(-135deg);
+}
+
+/* C on top */
+.cube--orientation-13 {
+  /* CRB */
+  transform: rotateY(90deg) rotateZ(-135deg) rotateX(45deg)
+}
+
+.cube--orientation-14 {
+  /* CMR */
+  transform: rotateY(90deg) rotateZ(-135deg) rotateX(-45deg)
+}
+
+.cube--orientation-15 {
+  /* CBG */
+  transform: rotateY(90deg) rotateZ(-135deg) rotateX(135deg)
+}
+
+.cube--orientation-16 {
+  /* CGM */
+  transform: rotateY(90deg) rotateZ(-135deg) rotateX(-135deg)
+}
+
+/* G on top */
+.cube--orientation-17 {
+  /* GMC */
+  transform: rotateX(135deg) rotateY(45deg);
+}
+
+.cube--orientation-18 {
+  /* GYM */
+  transform: rotateX(135deg) rotateY(-45deg);
+}
+
+.cube--orientation-19 {
+  /* GCB */
+  transform: rotateX(135deg) rotateY(135deg);
+}
+
+.cube--orientation-20 {
+  /* GBY */
+  transform: rotateX(135deg) rotateY(-45deg);
+}
+
+/* R on top */
+.cube--orientation-21 {
+  /* RYB */
+  transform: rotateX(-45deg) rotateY(45deg)
+}
+
+.cube--orientation-22 {
+  /* RBC */
+  transform: rotateX(-45deg) rotateY(-45deg)
+}
+
+.cube--orientation-23 {
+  /* RMY */
+  transform: rotateX(-45deg) rotateY(135deg)
+}
+
+.cube--orientation-24 {
+  /* RCM */
+  transform: rotateX(-45deg) rotateY(-135deg)
+}
+
+.cube__face {
+  position: absolute;
+  width: var(--face-size);
+  height: var(--face-size);
+}
+
+/* TOP */
+.cube__face--1 {
+  transform: rotateX(90deg) translateZ(calc(0.5 * var(--face-size)));
+}
+
+/* BACK */
+.cube__face--2 {
+  transform: rotateX(180deg) translateZ(calc(-0.5 * var(--face-size)));
+}
+
+/* BOTTOM */
+.cube__face--3 {
+  transform: rotateX(-90deg) translateZ(calc(0.5 * var(--face-size)));
+}
+
+/* LEFT */
+.cube__face--4 {
+  transform: rotateY(-90deg) translateZ(calc(0.5 * var(--face-size)));
+}
+
+/* RIGHT */
+.cube__face--5 {
+  transform: rotateY(90deg) translateZ(calc(0.5 * var(--face-size)));
+}
+
+/* FRONT */
+.cube__face--6 {
+  transform: rotateY(0deg) translateZ(calc(-0.5 * var(--face-size)));
+}
+
+.cube--exploded .cube__face {
+  transform: none;
+}
+
+.cube--exploded .cube__face--1 {
+  top: calc(3 * var(--face-size));
+  left: var(--face-size);
+}
+
+.cube--exploded .cube__face--2 {
+  top: calc(2 * var(--face-size));
+  left: var(--face-size);
+}
+
+.cube--exploded .cube__face--3 {
+  top: var(--face-size);
+  left: var(--face-size);
+}
+
+.cube--exploded .cube__face--4 {
+  top: var(--face-size);
+  left: calc(2 * var(--face-size));
+}
+
+.cube--exploded .cube__face--5 {
+  top: var(--face-size);
+  left: 0;
+}
+
+.cube--exploded .cube__face--6 {
+  top: 0;
+  left: var(--face-size);
+}
