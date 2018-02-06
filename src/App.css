@@ -1,3 +1,46 @@
+.game__timer {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+}
+
+.game__timer-bar {
+  background-color: limegreen;
+  height: 4px;
+}
+
+.game__score {
+  position: absolute;
+  top: 20px;
+  left: 20px;
+  font-size: 100px;
+  font-weight: bold;
+  color: tomato;
+}
+
+.game__start-button {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  padding: 0.5em;
+  border: 0;
+  border-bottom: 0.1em solid rgba(0, 0, 0, 0.2);
+  font-size: 50px;
+  font-weight: bold;
+  text-transform: uppercase;
+  color: #fff;
+  background-color: tomato;
+  transform: translateX(-50%) translateY(-50%);
+  cursor: pointer;
+  outline-color: #999;
+}
+
+.game__start-button:active {
+  border-bottom: 0;
+  padding-top: 0.6em;
+}
+
 .solution {
   position: relative;
   padding: 20vh 45vw 30vh;
@@ -15,6 +58,7 @@
 }
 
 .options__choice {
+  position: relative;
   display: inline-block;
   padding-top: var(--face-size);
   padding-left: var(--face-size);
@@ -24,7 +68,29 @@
   transform: none;
 }
 
+.options__choice::after {
+  position: absolute;
+  top: calc(0.25 * var(--face-size));
+  left: calc(0.25 * var(--face-size));
+  content: "";
+  border-radius: 50%;
+  width: calc(2 * var(--face-size));
+  height: calc(3 * var(--face-size));
+  background-color: rgba(0,0,0,0.2);
+  filter: blur(10px);
+  transform: rotateZ(15deg) rotateY(-30deg) rotateX(30deg);
+  z-index: -1;
+  opacity: 0.6;
+
+}
+
 .options__choice--correct {
   transform: scale(1.5);
   transition: transform 1s;
+}
+
+.options__choice--correct::after {
+  opacity: 1;
+  transform: rotateZ(15deg) rotateY(-30deg) rotateX(30deg) translateZ(-4em);
+  transition: opacity 1s, transform 1s;
 }

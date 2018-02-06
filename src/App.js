@@ -5,7 +5,9 @@ import Cube from './components/Cube'
 import './App.css';
 
 
-const NUM_OPTIONS = 5;
+const NUM_OPTIONS = 5
+const GAME_DURATION = 60000
+const CORRECT_BONUS = 10000
 const colors = ['red', 'blue', 'green', 'gold', 'deepskyblue', 'magenta']
 
 const shuffle = (array) => {
@@ -49,7 +51,37 @@ const solutionsClash = (solution, orientation, potentialClash) => {
 class App extends Component {
   constructor(props) {
     super(props)
-    this.state = this.generatePuzzle()
+    this.state = {
+      ...this.generatePuzzle(),
+      active: false,
+      ended: false,
+      percentage: 100
+    }
+  }
+
+  tick() {
+    const percentage = Math.max(0, ((new Date().getTime() - this.state.startTime) / GAME_DURATION) * 100)
+    this.setState({
+      percentage
+    })
+    if (percentage < 100) requestAnimationFrame(this.tick.bind(this))
+    else this.endGame()
+  }
+
+  startGame() {
+    this.setState({
+      active: true,
+      score: 0,
+      startTime: new Date().getTime()
+    })
+    requestAnimationFrame(this.tick.bind(this))
+  }
+
+  endGame() {
+    this.setState({
+      active: false,
+      ended: true
+    })
   }
 
   generatePuzzle() {
@@ -73,30 +105,45 @@ class App extends Component {
   }
 
   makeSelection(cube) {
+    const correct = cube === this.state.solution
     this.setState({
-      chosen: true
+      chosen: true,
+      score: this.state.score + (correct ? 1 : -1),
+      startTime: this.state.startTime + (correct ? CORRECT_BONUS : 0)
     })
 
-    // setTimeout(() => {
-    //   this.setState(this.generatePuzzle())
-    // }, 3000)
+    setTimeout(() => {
+      this.setState(this.generatePuzzle())
+    }, 3000)
   }
 
   render() {
     return (
-      <div className="App">
-        <div className="solution">
-          <Cube colors={this.state.solution} orientation={this.state.orientation} chosen={this.state.chosen} />
+      <div className="game">
+        <div className="game__timer">
+          <div className="game__timer-bar" style={{
+            transform: `translateX(-${this.state.percentage}%)`
+          }}></div>
         </div>
-        <ul className="options">
-          {this.state.options.map((cube, idx)=>{
-            return (
-              <li className={`options__choice${this.state.chosen && cube === this.state.solution ? ' options__choice--correct' : ''}`} key={idx} onClick={this.makeSelection.bind(this, cube)}>
-                <Cube colors={cube} exploded={true} />
-              </li>
-            )
-          })}
-        </ul>
+        {this.state.active ?
+          <div className="game__game">
+            <div className="game__score">{this.state.score}</div>
+            <div className="solution">
+              <Cube colors={this.state.solution} orientation={this.state.orientation} chosen={this.state.chosen} />
+            </div>
+            <ul className="options">
+              {this.state.options.map((cube, idx)=>{
+                return (
+                  <li className={`options__choice${this.state.chosen && cube === this.state.solution ? ' options__choice--correct' : ''}`} key={idx} onClick={this.makeSelection.bind(this, cube)}>
+                    <Cube colors={cube} exploded={true} />
+                  </li>
+                )
+              })}
+            </ul>
+          </div>
+          : <div className="game__game">
+              <button className="game__start-button" onClick={this.startGame.bind(this)}>Start</button>
+            </div>}
       </div>
     );
   }
