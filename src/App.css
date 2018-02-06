@@ -1,3 +1,7 @@
+.game__game {
+  text-align: center;
+}
+
 .game__timer {
   position: absolute;
   top: 0;
@@ -13,10 +17,24 @@
 .game__score {
   position: absolute;
   top: 20px;
-  left: 20px;
+  left: 40px;
   font-size: 100px;
   font-weight: bold;
   color: tomato;
+}
+
+.game__final-score {
+  font-size: 100px;
+  color: tomato;
+  text-align: center;
+  margin-bottom: 50px;
+}
+
+.game__high-score {
+  font-size: 50px;
+  color: tomato;
+  text-align: center;
+  margin-bottom: 100px;
 }
 
 .game__start-button {
@@ -36,6 +54,11 @@
   outline-color: #999;
 }
 
+.game__start-button--restart {
+  position: static;
+  transform: none;
+}
+
 .game__start-button:active {
   border-bottom: 0;
   padding-top: 0.6em;
@@ -43,15 +66,46 @@
 
 .solution {
   position: relative;
-  padding: 20vh 45vw 30vh;
+  padding: 30vh 0;
   perspective: 10000px;
+}
+
+.cross {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 20px;
+  height: 20px;
+  margin-top: -10px;
+  margin-left: -10px;
+  border: 1px solid red;
+}
+
+.cross::before,
+.cross::after {
+  position: absolute;
+  content: "";
+  width: 100%;
+  height: 1px;
+  top: 50%;
+  left: 0;
+  background-color: #000;
+  z-index: 100;
+}
+
+.cross::before {
+  transform: rotate(45deg);
+}
+
+.cross::after {
+  transform: rotate(-45deg);
 }
 
 .options {
   list-style-type: none;
   padding-top: 6em;
   padding-left: 0;
-  font-size: 8px;
+  font-size: 5px;
   display: flex;
   width: 100%;
   justify-content: space-around;
@@ -76,21 +130,20 @@
   border-radius: 50%;
   width: calc(2 * var(--face-size));
   height: calc(3 * var(--face-size));
-  background-color: rgba(0,0,0,0.2);
+  background-color: rgba(0,0,0,0.15);
   filter: blur(10px);
   transform: rotateZ(15deg) rotateY(-30deg) rotateX(30deg);
+  transform-origin: 50% 75%;
   z-index: -1;
-  opacity: 0.6;
-
 }
 
 .options__choice--correct {
-  transform: scale(1.5);
+  transform: scale(2.5);
   transition: transform 1s;
 }
 
-.options__choice--correct::after {
-  opacity: 1;
-  transform: rotateZ(15deg) rotateY(-30deg) rotateX(30deg) translateZ(-4em);
-  transition: opacity 1s, transform 1s;
+.options__choice--correct::after,
+.options__choice--incorrect::after {
+  transform: translateX(calc(var(--face-size) / 10)) translateY(calc(var(--face-size) / -3)) rotateZ(15deg) rotateY(-30deg) rotateX(30deg) scale(0.75, 0.5);
+  transition: transform 1s;
 }

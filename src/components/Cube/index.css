@@ -1,5 +1,5 @@
 :root {
-  --face-size: 5em;
+  --face-size: 8em;
   --exploded-cube-shadow-color: rgba(0, 0, 0, 0.15);
 }
 
@@ -8,6 +8,7 @@
   width: var(--face-size);
   height: var(--face-size);
   transform-style: preserve-3d;
+  transform-origin: center center calc(var(--face-size) / 2);
 }
 
 .cube--orientation-1 {
@@ -158,7 +159,6 @@
   transform: rotateZ(15deg) rotateY(-30deg) rotateX(30deg);
 }
 
-
 .cube--exploded .cube__face--top {
   transform: rotateX(-15deg);
 }
@@ -214,4 +214,24 @@
 .cube--unfolded .cube__face {
   transform: none;
   transition: transform 1s;
+}
+
+.cube,
+.cube__face {
+  transition: transform 1s;
+}
+
+.solution .cube {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  margin-top: calc(var(--face-size) / -2);
+  margin-left: calc(var(--face-size) / -2);
+}
+
+.solution .cube,
+.solution .cube__face,
+.options--no-choice .cube,
+.options--no-choice .cube__face {
+  transition: none;
 }

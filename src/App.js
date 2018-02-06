@@ -1,13 +1,13 @@
-import React, { Component } from 'react';
+import React, { Component } from 'react'
 
 import Cube from './components/Cube'
 
-import './App.css';
-
+import './App.css'
 
 const NUM_OPTIONS = 5
 const GAME_DURATION = 60000
-const CORRECT_BONUS = 10000
+const CORRECT_BONUS = 15000
+const HIGH_SCORE_KEY = 'highScore'
 const colors = ['red', 'blue', 'green', 'gold', 'deepskyblue', 'magenta']
 
 const shuffle = (array) => {
@@ -32,7 +32,7 @@ const orientationVisibles = [[],
 
 const getVisibleColors = (solution, orientation) => {
   const visibles = orientationVisibles[orientation]
-  return visibles.map(v => solution[v]);
+  return visibles.map(v => solution[v])
 }
 
 const solutionsClash = (solution, orientation, potentialClash) => {
@@ -48,14 +48,42 @@ const solutionsClash = (solution, orientation, potentialClash) => {
   return false
 }
 
+const rateColorMatch = (correctColors, incorrectColors) => {
+  return incorrectColors.reduce((tot,current,idx) => {
+  	if (correctColors[idx]===current)
+      return tot + (25 * (idx===0 ? 2 : 1))
+  	else if (correctColors.indexOf(current)>=0)
+      return tot + 10
+  	else
+      return tot
+  }, 0)
+}
+
+const bestIncorrectOrientation = (solution, orientation, incorrect) => {
+  const solutionColors = getVisibleColors(solution, orientation)
+  let bestRating = 0
+  let bestRatingIdx = 0
+  for (let i=1; i<=24; i++) {
+    let incorrectColors = getVisibleColors(incorrect, i)
+    let matchScore = rateColorMatch(solutionColors, incorrectColors)
+    if (matchScore > bestRating) {
+      bestRating = matchScore
+      bestRatingIdx = i
+    }
+  }
+  return bestRatingIdx
+}
+
 class App extends Component {
   constructor(props) {
     super(props)
+
     this.state = {
       ...this.generatePuzzle(),
       active: false,
       ended: false,
-      percentage: 100
+      percentage: 100,
+      highScore: parseInt(localStorage.getItem(HIGH_SCORE_KEY),10) || 0
     }
   }
 
@@ -78,9 +106,13 @@ class App extends Component {
   }
 
   endGame() {
+    if (this.state.score > this.state.highScore) {
+      localStorage.setItem(HIGH_SCORE_KEY, this.state.score)
+    }
     this.setState({
       active: false,
-      ended: true
+      ended: true,
+      highScore: Math.max(this.state.score, this.state.highScore)
     })
   }
 
@@ -89,7 +121,7 @@ class App extends Component {
     const orientation = Math.ceil(Math.random() * 24)
     let options = [solution]
     while (options.length < NUM_OPTIONS) {
-      let decoy = shuffle(colors);
+      let decoy = shuffle(colors)
       if (!solutionsClash(solution, orientation, decoy)) {
         options.push(decoy)
       }
@@ -105,11 +137,14 @@ class App extends Component {
   }
 
   makeSelection(cube) {
-    const correct = cube === this.state.solution
+    const { solution, orientation, score, startTime } = this.state
+    const correct = cube === solution
+
     this.setState({
-      chosen: true,
-      score: this.state.score + (correct ? 1 : -1),
-      startTime: this.state.startTime + (correct ? CORRECT_BONUS : 0)
+      chosen: cube,
+      wrongOrientation: correct ? null : bestIncorrectOrientation(solution, orientation, cube),
+      score: score + (correct ? 1 : -1),
+      startTime: startTime + (correct ? CORRECT_BONUS : 0)
     })
 
     setTimeout(() => {
@@ -129,24 +164,42 @@ class App extends Component {
           <div className="game__game">
             <div className="game__score">{this.state.score}</div>
             <div className="solution">
-              <Cube colors={this.state.solution} orientation={this.state.orientation} chosen={this.state.chosen} />
+              <Cube colors={this.state.solution} orientation={this.state.orientation} />
             </div>
-            <ul className="options">
-              {this.state.options.map((cube, idx)=>{
+            <ul className={`options${this.state.chosen? '' : ' options--no-choice'}`}>
+              {this.state.options.map((cube, idx)=> {
+                let orientation = null
+                let chosenClass = ''
+                if (this.state.chosen) {
+                  if (cube === this.state.solution) {
+                    orientation = this.state.orientation
+                    chosenClass = 'options__choice--correct'
+                  } else if (this.state.chosen === cube) {
+                    orientation = this.state.wrongOrientation
+                    chosenClass = 'options__choice--incorrect'
+                  }
+                }
                 return (
-                  <li className={`options__choice${this.state.chosen && cube === this.state.solution ? ' options__choice--correct' : ''}`} key={idx} onClick={this.makeSelection.bind(this, cube)}>
-                    <Cube colors={cube} exploded={true} />
+                  <li className={`options__choice ${chosenClass}`} key={idx} onClick={this.makeSelection.bind(this, cube)}>
+                    <Cube colors={cube} exploded={orientation ? false : true} orientation={orientation} />
                   </li>
                 )
               })}
             </ul>
           </div>
-          : <div className="game__game">
-              <button className="game__start-button" onClick={this.startGame.bind(this)}>Start</button>
+          : <div className="game__game game__game--not-active">
+              {this.state.ended ?
+                <div>
+                  <p className="game__final-score">You scored {this.state.score}</p>
+                  <p className="game__high-score">Your high score is {this.state.highScore}</p>
+                  <button className="game__start-button game__start-button--restart" onClick={this.startGame.bind(this)}>Play again</button>
+                </div>
+              : <button className="game__start-button" onClick={this.startGame.bind(this)}>Start</button>}
+
             </div>}
       </div>
-    );
+    )
   }
 }
 
-export default App;
+export default App
