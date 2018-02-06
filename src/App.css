@@ -1,13 +1,14 @@
 .solution {
   position: relative;
-  padding: 20vh 47vw 30vh;
+  padding: 20vh 45vw 30vh;
   perspective: 10000px;
 }
 
 .options {
   list-style-type: none;
+  padding-top: 6em;
   padding-left: 0;
-  font-size: 5px;
+  font-size: 8px;
   display: flex;
   width: 100%;
   justify-content: space-around;
@@ -15,6 +16,15 @@
 
 .options__choice {
   display: inline-block;
+  padding-top: var(--face-size);
+  padding-left: var(--face-size);
   width: calc(3 * var(--face-size));
   height: calc(4 * var(--face-size));
+  cursor: pointer;
+  transform: none;
+}
+
+.options__choice--correct {
+  transform: scale(1.5);
+  transition: transform 1s;
 }
