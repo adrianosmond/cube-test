@@ -21,6 +21,15 @@ const shuffle = (array) => {
   return ret
 }
 
+// This array defines which faces of the cube will
+// be visible for each of the 24 possible orientations.
+// The faces are as follows:
+//
+//       1
+//   2   0   3
+//       4
+//       5
+//
 const orientationVisibles = [[],
   [5,4,3], [5,2,4], [5,3,1], [5,1,2],
   [0,2,1], [0,1,3], [0,4,2], [0,3,4],
